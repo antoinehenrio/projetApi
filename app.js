@@ -2,6 +2,8 @@ let getPage, firstPage;
 let updateRightPagination;
 let updateLeftPagination;
 $(function(){
+    //Stockage
+    const STORAGE = localStorage
     //Sujet du livre
     const SUBJECT = 'fantasy'
     //Nombre de livre par page
@@ -11,14 +13,14 @@ $(function(){
     //Page courante (commence à 1)
     let page = 1
 
+    let constBooks = []
     let books = []
+    //Mode recherche ?
+    let isSearch = false
 
-    let number = 0
-
-    let lastPage = 10
-
-    //Récupérer les livres depuis l'API
+    //Récupérer les livres par sujet depuis l'API
     let getBooks = (subject, cb, page = 0) => {
+        console.log('here')
         //du livre numéro
         let offset =  page * N_PER_API
         //au livre numéro
@@ -31,23 +33,37 @@ $(function(){
         })
     }
 
+    //Recherche les livres
+    searchBooks = (query, cb, page = 0) => {
+        page++
+        $.ajax({
+            url: `http://openlibrary.org/search.json?q=${query}&page=${page}`,
+            success: (data) => {
+                console.log(data)
+                cb(data)
+            }
+        })
+    }
 
     //Pagination
-    getPage = (page) => {
+    let getPage = (page) => {
         let start = (page - 1) * N_PER_PAGE
         let end = start + N_PER_PAGE
+        end = (end > books.length) ? books.length : end
         let book
 
         //Attention si la page est trop élevée, on rappel l'API pour obtenir de nouveaux livres
-    if(start >= books.length){
-        getBooks(SUBJECT, (data) =>{
-        for(let book of data.works)
-            books.push(book)
-        console.log(books)
-        getPage(page)
-        }, Math.floor(books.length / N_PER_API))
-        return
-    }   
+        if(start >= books.length && start != 0){
+            getBooks(SUBJECT, (data) =>{
+                for(let book of data.works){
+                    books.push(book)
+                    constBooks.push(book)
+                }
+                console.log(books)
+                getPage(page)
+            }, Math.floor(books.length / N_PER_API))
+            return
+        }
 
         clearBooks()
 
@@ -55,19 +71,21 @@ $(function(){
             book = books[i]
             renderBook(book)
         }
-        renderPagination(page)
     }
 
     //Afficher le livre
     let renderBook = (book) => {
-        html = '<li class="book1">' +
-        '<img src="https://covers.openlibrary.org/b/id/' + book.cover_id + '-L.jpg" height="70" width="50" class="bookCover">' +
-        '<p>' + book.title + '</br>' +
-        book.authors[0].name + '</p></li>';
-        $('.listBook').append(html) 
-    }
+        html = '<li class="book1 ' + (STORAGE.getItem(book.key) ? 'favorite' : '') + '" data-key="' + book.key + '">' +
+            '<img src="https://covers.openlibrary.org/b/id/' + book.cover_id + '-L.jpg" height="70" width="50" class="bookCover">' +
+            '<p class="bookTitle"><span class="title">' + book.title + '</span></br>' +
+                book.authors[0].name +
+            '</p>' +
+        '</li>';
 
-    //Afficher la pagination
+        $('.listBook').append(html)
+    }
+	
+	//Afficher la pagination
     let renderPagination = (numpage) =>{
         clearLinks()
         let compteur,max
@@ -102,8 +120,8 @@ $(function(){
     let clearBooks = () => {
         $('.listBook').empty()
     }
-
-    //Enlever les liens de pagination
+	
+	//Enlever les liens de pagination
     let clearLinks = () => {
         $('.listeNav').empty()
     }
@@ -120,9 +138,57 @@ $(function(){
     //Récupération des livres initial
     getBooks(SUBJECT, (data) =>{
         books = data.works
-        console.log(books)
-        getPage(1)        
+        constBooks = data.works
+
+        getPage(9)        
     })
 
+    //Appuie sur la touche entrée de la barre de recherche
+    /*$('#search').keyup((e) => {
+        if(e.keyCode == 13){
+            searchBooks($(e.target).val(), (data) => {
+                isSearch = true
+                //Traiter pour avoir des données similaires à getBooks
+                books = data.docs
 
+                for(let i = 0; i < books.length; i++)
+                {
+                    books[i].cover_id = books[i].cover_i
+                    books[i].authors = []
+                    books[i].authors.push({name: books[i].author_name})
+                }
+
+                getPage(1)
+            })
+        }
+    })*/
+
+    $('#search').on('keyup', (e) => {
+        let el = $(e.target)
+        let query = el.val().trim().toLowerCase()
+
+        books = []
+
+        if(query === "")
+            books = constBooks
+        else {
+            for(let book of constBooks){
+                let searching = (book.title + JSON.stringify(book.authors)).toLowerCase().trim()
+                console.log(searching)
+                if(searching.indexOf(query) > -1)
+                    books.push(book)
+            }
+        }
+
+        getPage(1)
+    })
+
+    $('.listBook').on('click', '.book1', (e) => {
+        let el = $(e.target)
+
+        if(!el.is('li'))
+            el = el.closest('li')
+        
+        STORAGE.setItem(el.data('key'), true)
+    })
 })
