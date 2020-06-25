@@ -3,9 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://css.gg/search.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>Document</title>
 </head>
 <body>
-    
+    <header class="barreRecherche">
+        <input type="text" id="search" name="name" class="searchBook" placeholder="Rechercher..." onclick="this.value='';">
+        <i class="gg-search"></i>
+    </header>
+    <main>
+        <div class="conteneur">
+            <ol class="listBook">
+                <li class="book1">
+                    <img src="1984.jpg" height="70" width="50" class="bookCover">
+                    <p class="bookTitle"><span class="title">Le double</span></br>
+                        L'histoire d'une vie de merde comme la mienne vois-tu
+                    </p>
+                </li>
+                <li class="book1">
+                    <img src="crimeChat.jpg" height="70" width="50" class="bookCover">
+                    <p class="bookTitle"><span class="title">Crime et châtiment</span></br>
+                        Ce con de russe est dans la merde
+                    </p>
+                </li>
+                <!-- <li class="book1">
+                    Le joueur
+                </li>
+                <li class="book1">
+                    Guerre et paix
+                </li>
+                <li class="book1">
+                    Le Horla
+                </li>
+                <li class="book1">
+                    Bel-ami
+                </li>
+                <li class="book1">
+                    Les raisins de la colère
+                </li> -->
+            </ol>
+        </div>
+    </main>
 </body>
 </html>
