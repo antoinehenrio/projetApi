@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .barreRecherche {
   display: table-cell;
   width: 100vw;
@@ -50,6 +51,7 @@ html, body {
   padding-bottom: 3vh;
   padding-left: 2vw;
   border-bottom: 1px solid #2E4052;
+  position: relative;
 }
 
 .book2 {
@@ -133,6 +135,27 @@ html, body {
     margin-left: 3vw;
     margin-right: 3vw;
   }
+
+.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+  position: absolute;
+  bottom: 6px;
+  right: 16px;
+}
+
+.rating > span {
+  display: inline-block;
+  position: relative;
+  width: 1.1em;
+}
+
+.rating > span:hover:before,
+.rating > span:hover ~ span:before,
+.rating > span.active:before,
+.rating > span.active ~ span:before {
+  content: "★";
+  position: absolute;
 }
 
 /*# sourceMappingURL=style.css.map */
