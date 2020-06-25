@@ -128,4 +128,11 @@ html, body {
   justify-items: center;
 }
 
+@media screen and (min-width: 1000px) {
+  .listBook {
+    margin-left: 3vw;
+    margin-right: 3vw;
+  }
+}
+
 /*# sourceMappingURL=style.css.map */
