@@ -2,6 +2,7 @@ let getPage, firstPage;
 let updateRightPagination;
 let updateLeftPagination;
 let flag = false;
+let flag2 = false;
 $(function(){
     //Sujet du livre
     const SUBJECT = 'fantasy'
@@ -42,7 +43,7 @@ $(function(){
     if (flag == true){
         start = (page - 10) * N_PER_PAGE
         end = start + N_PER_PAGE
-        flag = false
+        // flag = false
     }
         //Attention si la page est trop élevée, on rappel l'API pour obtenir de nouveaux livres
     if(start >= books.length){
@@ -56,7 +57,6 @@ $(function(){
     }   
 
         clearBooks()
-
         for(let i = start; i < end; i++){
             book = books[i]
             renderBook(book)
@@ -77,14 +77,24 @@ $(function(){
     let renderPagination = (numpage) =>{
         clearLinks()
         let compteur,max
-        if (numpage<lastPage && numpage != 1){
-            compteur = numpage - 9
-            max = numpage
+        if (flag == true){
+            compteur = firstPage - 9
+            max = firstPage
+            flag = false
         } else{
-            compteur = numpage
-            max = numpage + 9
-            if (max > number){
-                max = number
+            if (flag2 == true){
+                compteur = lastPage
+                max = compteur + 9
+                flag2 = false
+                if (max > number){
+                    max = number
+                }
+            }else{
+                compteur = firstPage
+                max = compteur + 9
+                if (max > number){
+                    max = number
+                }
             }
         }
         let i 
@@ -105,7 +115,6 @@ $(function(){
         html = ''
         lastPage = max
         firstPage = compteur
-        console.log('Page actuelle : ' + page)
     }
 
     //Enlever tous les livre affichés (notamment pour en afficher d'autres après)
@@ -120,11 +129,12 @@ $(function(){
 
     //Actualise la pagination en cliquant sur la flèche de droite
     updateRightPagination = () => {
-        getPage(lastPage)
+        flag2 = true
+        getPage(lastPage + 1)
     }
 
     updateLeftPagination = () => {
-        if (firstPage != 1){
+        if (firstPage > 9){
             flag = true
             getPage(firstPage)
         }
@@ -134,6 +144,8 @@ $(function(){
     getBooks(SUBJECT, (data) =>{
         books = data.works
         console.log(books)
+        number = books.work_count
+        firstPage = 1
         getPage(1)        
     })
 
