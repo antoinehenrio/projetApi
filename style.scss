@@ -65,6 +65,7 @@ html,body {
     border-bottom: 1px solid $charcoal;
     // grid-row-start:1;
     // grid-row-end: span 1;
+    position: relative;
 }
 
 .book2{
@@ -149,3 +150,23 @@ html,body {
     justify-content: center;
     justify-items: center;
 }
+
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    position: absolute;
+    bottom: 6px;
+    right: 16px;
+  }
+  .rating > span {
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+  }
+  .rating > span:hover:before,
+  .rating > span:hover ~ span:before,
+  .rating > span.active:before,
+  .rating > span.active ~ span:before {
+     content: "\2605";
+     position: absolute;
+  }
