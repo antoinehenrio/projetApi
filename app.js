@@ -1,3 +1,6 @@
+let getPage, firstPage;
+let updateRightPagination;
+let updateLeftPagination;
 $(function(){
     //Stockage
     const STORAGE = localStorage
@@ -81,10 +84,55 @@ $(function(){
 
         $('.listBook').append(html)
     }
+	
+	//Afficher la pagination
+    let renderPagination = (numpage) =>{
+        clearLinks()
+        let compteur,max
+        if (numpage<lastPage && numpage != 1){
+            compteur = numpage - 9
+            max = numpage
+        } else{
+            compteur = numpage
+            max = numpage + 9
+        }
+        let i 
+        let firstLink = '<li>' +
+        '<a class="lien" id="leftArrow" href="#" onclick="updateLeftPagination();">' +
+        '&lsaquo;' +
+        '</a></li>'
+        $('.listeNav').append(firstLink)
+        for (i=compteur;i<max;i++){
+            let html = ''
+            html = '<li>'+
+            '<a class="lien" href="#" onclick="getPage(' + i +');return false;">' + 
+            i +
+            '</a></li>'
+            $('.listeNav').append(html)
+        }
+        $('.listeNav').append('<li><a class="lien" id="rightArrow" href="#" onclick="updateRightPagination();">&rsaquo;</a></li>')
+        html = ''
+        lastPage = max
+        firstPage = compteur
+    }
 
     //Enlever tous les livre affichés (notamment pour en afficher d'autres après)
     let clearBooks = () => {
         $('.listBook').empty()
+    }
+	
+	//Enlever les liens de pagination
+    let clearLinks = () => {
+        $('.listeNav').empty()
+    }
+
+    //Actualise la pagination en cliquant sur la flèche de droite
+    updateRightPagination = () => {
+        getPage(lastPage)
+    }
+
+    updateLeftPagination = () => {
+        getPage(firstPage)
     }
 
     //Récupération des livres initial
@@ -143,7 +191,4 @@ $(function(){
         
         STORAGE.setItem(el.data('key'), true)
     })
-
-
-
 })
