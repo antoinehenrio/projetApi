@@ -1,4 +1,6 @@
 $(function(){
+    //Stockage
+    const STORAGE = localStorage
     //Sujet du livre
     const SUBJECT = 'fantasy'
     //Nombre de livre par page
@@ -8,10 +10,14 @@ $(function(){
     //Page courante (commence à 1)
     let page = 1
 
+    let constBooks = []
     let books = []
+    //Mode recherche ?
+    let isSearch = false
 
-    //Récupérer les livres depuis l'API
+    //Récupérer les livres par sujet depuis l'API
     let getBooks = (subject, cb, page = 0) => {
+        console.log('here')
         //du livre numéro
         let offset =  page * N_PER_API
         //au livre numéro
@@ -24,17 +30,37 @@ $(function(){
         })
     }
 
+    //Recherche les livres
+    searchBooks = (query, cb, page = 0) => {
+        page++
+        $.ajax({
+            url: `http://openlibrary.org/search.json?q=${query}&page=${page}`,
+            success: (data) => {
+                console.log(data)
+                cb(data)
+            }
+        })
+    }
+
     //Pagination
     let getPage = (page) => {
         let start = (page - 1) * N_PER_PAGE
         let end = start + N_PER_PAGE
+        end = (end > books.length) ? books.length : end
         let book
 
         //Attention si la page est trop élevée, on rappel l'API pour obtenir de nouveaux livres
-        if(start >= books.length)
+        if(start >= books.length && start != 0){
             getBooks(SUBJECT, (data) =>{
-                books = books.push(data.works)
-            }, Math.floor(data.length / N_PER_API))
+                for(let book of data.works){
+                    books.push(book)
+                    constBooks.push(book)
+                }
+                console.log(books)
+                getPage(page)
+            }, Math.floor(books.length / N_PER_API))
+            return
+        }
 
         clearBooks()
 
@@ -46,22 +72,76 @@ $(function(){
 
     //Afficher le livre
     let renderBook = (book) => {
-        $('body').append('<p>' + book.title + '</p>')
-        $('body').append('<img src="https://covers.openlibrary.org/b/id/' + book.cover_id + '-L.jpg" alt="' + book.title + '"/>')
+        html = '<li class="book1 ' + (STORAGE.getItem(book.key) ? 'favorite' : '') + '" data-key="' + book.key + '">' +
+            '<img src="https://covers.openlibrary.org/b/id/' + book.cover_id + '-L.jpg" height="70" width="50" class="bookCover">' +
+            '<p class="bookTitle"><span class="title">' + book.title + '</span></br>' +
+                book.authors[0].name +
+            '</p>' +
+        '</li>';
+
+        $('.listBook').append(html)
     }
 
     //Enlever tous les livre affichés (notamment pour en afficher d'autres après)
     let clearBooks = () => {
-        $('body').empty()
+        $('.listBook').empty()
     }
 
     //Récupération des livres initial
     getBooks(SUBJECT, (data) =>{
         books = data.works
+        constBooks = data.works
 
-        console.log(books)
+        getPage(9)        
+    })
 
-        getPage(2)        
+    //Appuie sur la touche entrée de la barre de recherche
+    /*$('#search').keyup((e) => {
+        if(e.keyCode == 13){
+            searchBooks($(e.target).val(), (data) => {
+                isSearch = true
+                //Traiter pour avoir des données similaires à getBooks
+                books = data.docs
+
+                for(let i = 0; i < books.length; i++)
+                {
+                    books[i].cover_id = books[i].cover_i
+                    books[i].authors = []
+                    books[i].authors.push({name: books[i].author_name})
+                }
+
+                getPage(1)
+            })
+        }
+    })*/
+
+    $('#search').on('keyup', (e) => {
+        let el = $(e.target)
+        let query = el.val().trim().toLowerCase()
+
+        books = []
+
+        if(query === "")
+            books = constBooks
+        else {
+            for(let book of constBooks){
+                let searching = (book.title + JSON.stringify(book.authors)).toLowerCase().trim()
+                console.log(searching)
+                if(searching.indexOf(query) > -1)
+                    books.push(book)
+            }
+        }
+
+        getPage(1)
+    })
+
+    $('.listBook').on('click', '.book1', (e) => {
+        let el = $(e.target)
+
+        if(!el.is('li'))
+            el = el.closest('li')
+        
+        STORAGE.setItem(el.data('key'), true)
     })
 
 

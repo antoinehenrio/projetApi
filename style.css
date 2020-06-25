@@ -48,8 +48,6 @@ html, body {
   padding-bottom: 3vh;
   padding-left: 2vw;
   border-bottom: 1px solid #2E4052;
-  grid-row-start: 1;
-  grid-row-end: span 1;
 }
 
 .book2 {
