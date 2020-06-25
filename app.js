@@ -1,6 +1,7 @@
 let getPage, firstPage;
 let updateRightPagination;
 let updateLeftPagination;
+let flag = false;
 $(function(){
     //Sujet du livre
     const SUBJECT = 'fantasy'
@@ -38,6 +39,11 @@ $(function(){
         let end = start + N_PER_PAGE
         let book
 
+    if (flag == true){
+        start = (page - 10) * N_PER_PAGE
+        end = start + N_PER_PAGE
+        flag = false
+    }
         //Attention si la page est trop élevée, on rappel l'API pour obtenir de nouveaux livres
     if(start >= books.length){
         getBooks(SUBJECT, (data) =>{
@@ -77,6 +83,9 @@ $(function(){
         } else{
             compteur = numpage
             max = numpage + 9
+            if (max > number){
+                max = number
+            }
         }
         let i 
         let firstLink = '<li>' +
@@ -96,6 +105,7 @@ $(function(){
         html = ''
         lastPage = max
         firstPage = compteur
+        console.log('Page actuelle : ' + page)
     }
 
     //Enlever tous les livre affichés (notamment pour en afficher d'autres après)
@@ -114,7 +124,10 @@ $(function(){
     }
 
     updateLeftPagination = () => {
-        getPage(firstPage)
+        if (firstPage != 1){
+            flag = true
+            getPage(firstPage)
+        }
     }
 
     //Récupération des livres initial
