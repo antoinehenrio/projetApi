@@ -1,0 +1,94 @@
+$turquoiseGreen: #BDD9BF;
+$charcoal: #2E4052;
+$maximumYellowRed: #FFC857;
+$white: #FFFFFF;
+$darkPurple: #412234;
+$lightGrey: #D2D7DF;
+
+.barreRecherche{
+    display: table-cell;
+    width: 100vw;
+    background-color: $charcoal;
+    height: 8vh;
+    color: $turquoiseGreen;
+    vertical-align: middle;
+    padding-left: 10vw;
+}
+
+html,body {
+    margin: 0;
+    font-family: "Verdana";
+    background-color: $charcoal;
+}
+
+.searchBook{
+    background-color: $charcoal;
+    color: $white;
+    border: none;
+    font-size: 16px;
+}
+
+.gg-search{
+    display: inline-block;
+    float: right;
+    margin-right: 10vw;
+    margin-top: 0.1vh;
+}
+
+.conteneur{
+   
+}
+
+.listBook{
+    // list-style: none;
+    display:grid;
+    grid-template-columns: 1;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 2vh;
+    padding-left: 0;
+    margin-top: 0;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.book1{
+    display:grid;
+    grid-template-columns: 20vw 1fr;
+    background-color: $lightGrey;
+    color: $charcoal;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    padding-left: 2vw;
+    border-bottom: 1px solid $charcoal;
+    grid-row-start:1;
+    grid-row-end: span 1;
+}
+
+.book2{
+    display:grid;
+    grid-template-columns: 20vw 1fr;
+    background-color: $lightGrey;
+    color: $charcoal;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    padding-left: 2vw;
+    border-bottom: 1px solid $charcoal;
+    grid-row-start:2;
+    grid-row-end: span 1;
+}
+
+.bookCover{
+    grid-column-start:1;
+    grid-column-end: 2;
+}
+
+.bookTitle{
+    display: table-cell;
+    grid-column-start:2;
+    grid-column-end: 3;
+    vertical-align: middle;
+}
+
+.title{
+    font-size: 16px;
+}

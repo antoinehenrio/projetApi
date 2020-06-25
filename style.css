@@ -1,0 +1,84 @@
+.barreRecherche {
+  display: table-cell;
+  width: 100vw;
+  background-color: #2E4052;
+  height: 8vh;
+  color: #BDD9BF;
+  vertical-align: middle;
+  padding-left: 10vw;
+}
+
+html, body {
+  margin: 0;
+  font-family: "Verdana";
+  background-color: #2E4052;
+}
+
+.searchBook {
+  background-color: #2E4052;
+  color: #FFFFFF;
+  border: none;
+  font-size: 16px;
+}
+
+.gg-search {
+  display: inline-block;
+  float: right;
+  margin-right: 10vw;
+  margin-top: 0.1vh;
+}
+
+.listBook {
+  display: grid;
+  grid-template-columns: 1;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 2vh;
+  padding-left: 0;
+  margin-top: 0;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.book1 {
+  display: grid;
+  grid-template-columns: 20vw 1fr;
+  background-color: #D2D7DF;
+  color: #2E4052;
+  padding-top: 3vh;
+  padding-bottom: 3vh;
+  padding-left: 2vw;
+  border-bottom: 1px solid #2E4052;
+  grid-row-start: 1;
+  grid-row-end: span 1;
+}
+
+.book2 {
+  display: grid;
+  grid-template-columns: 20vw 1fr;
+  background-color: #D2D7DF;
+  color: #2E4052;
+  padding-top: 3vh;
+  padding-bottom: 3vh;
+  padding-left: 2vw;
+  border-bottom: 1px solid #2E4052;
+  grid-row-start: 2;
+  grid-row-end: span 1;
+}
+
+.bookCover {
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+.bookTitle {
+  display: table-cell;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  vertical-align: middle;
+}
+
+.title {
+  font-size: 16px;
+}
+
+/*# sourceMappingURL=style.css.map */
